@@ -1,8 +1,29 @@
+// imports
 const express = require("express");
+const cors = require('cors');
+const dotenv = require('dotenv');
+const mongoose = require('mongoose')
+
 const app = express();
 
-const projectsRouter = require('./routes/projects')
+/*var corsOptions = {
+  origin: 
+};*/
 
-app.use('/projects', projectsRouter)
+//app.use(cors(corsOptions));
+app.use(express.json());
 
-app.listen(8000)
+const projectsRouter = require('./routes/projects');
+app.use('/projects', projectsRouter);
+
+// import local env variables
+dotenv.config();
+
+// create connection to database
+mongoose.connect(process.env.DB_URI, {useNewUrlParser: true});
+const db = mongoose.connection;
+db.on('error', (error) => console.error(error));
+db.once('open', () => console.log('Connected to db'));
+
+const PORT = process.env.PORT || 8000;
+app.listen(PORT)

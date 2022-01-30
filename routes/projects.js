@@ -1,13 +1,42 @@
 const express = require("express");
+const res = require("express/lib/response");
 const router = express.Router();
+const Project = require('../models/project');
+const mongoose = require('mongoose');
 
-router.get('/cards', (req, res) => {
-    // get fields bellow for all projects in mongodb database
-    res.json({projects: [{name: "project 1", field: "fullstack", tech: ["C++", "Python"]}, {name: "project 1", field: "gameDev", tech: ["C#", "Unity"]}]});
+// ==============================================================================================================================================================================
+
+// get all cards
+router.get('/cards', async (req, res) => {
+    try {
+        const projects = await Project.find();
+        res.json(projects);
+    }
+    catch {
+        res.status(500).json({ message: err.message });
+    }
 })
 
-router.get('/page', (req, res) => {
-    res.json({pageType: "with-vid or etc", project: {name: "Project 1", field: "Game dev", tech: ["C#", "Unity"], desc: "full description of project", vid: "link to embed private yt vid", }})
+// get single page
+router.get('/project/:id', getProjectPage, (req, res) => {
+    console.log("get project page complete")
 })
+
+// ==============================================================================================================================================================================
+
+async function getProjectPage(req, res, next) {
+    let project;
+    try {
+        console.log(typeof req.params.id);
+        let id = mongoose.Types.ObjectId(req.params.id);
+        project = await Project.findById(id);
+        if (project == null) {
+            return res.status(404).json({ message: "Cannot find project by id" });
+        }
+    }
+    catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+}
 
 module.exports = router
