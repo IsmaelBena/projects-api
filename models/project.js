@@ -6,10 +6,6 @@ const projectSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    pageData: {
-        type: [String],
-        required: true
-    },
     url: {
         type: String,
         required: true,

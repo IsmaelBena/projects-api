@@ -10,7 +10,7 @@ const app = express();
   origin: 
 };*/
 
-//app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 const projectsRouter = require('./routes/projects');
