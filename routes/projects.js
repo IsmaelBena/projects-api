@@ -10,13 +10,13 @@ const mongoose = require('mongoose');
 router.get('/cards', async (req, res) => {
     try {
         const projects = await Project.find();
-        let cards = [];
+        let cardsData = [];
         let filterData = {
             fields: [],
             tags: []
         };
         projects.map((project) => {
-            cards.push({
+            cardsData.push({
                 name: project.name,
                 url: project.url,
                 field: project.field,
@@ -35,7 +35,7 @@ router.get('/cards', async (req, res) => {
             }
         });
         const projectsPageData = {
-            cards,
+            cardsData,
             filterData
         }
         res.json(projectsPageData);
@@ -48,6 +48,7 @@ router.get('/cards', async (req, res) => {
 // get single page
 router.get('/project/:url', async (req, res) => {
     try {
+        console.log("attempting to get project")
         const project = await Project.findOne({ url: req.params.url }).exec();
         res.json(project);
     }
@@ -59,9 +60,23 @@ router.get('/project/:url', async (req, res) => {
 // add a new project
 router.post('/project', async (req, res) => {
     try {
+        let dataToValidate = req.body;
+        console.log(dataToValidate);
+        if (dataToValidate.video === "") {
+            delete dataToValidate["video"]
+        }
+        if (dataToValidate.otherLinks.length < 1) {
+            delete dataToValidate["otherLinks"]
+        }
+        console.log(dataToValidate);
         const newProject = new Project(req.body);
+        console.log("newProject");
         await newProject.save();
+        console.log(newProject);
         res.status(201).json({ message: 'new project created'});
+        /*const newProject = new Project(req.body);
+        await newProject.save();
+        res.status(201).json({ message: 'new project created'});*/
     }
     catch {
         res.status(500).json({ message: err.message });
