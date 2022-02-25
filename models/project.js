@@ -43,7 +43,7 @@ const projectSchema = new mongoose.Schema({
         required: false
     },
     otherLinks: {
-        type: String,
+        type: [String],
         required: false
     }
 })

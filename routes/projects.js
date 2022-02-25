@@ -17,6 +17,7 @@ router.get('/cards', async (req, res) => {
         };
         projects.map((project) => {
             cardsData.push({
+                id: project._id,
                 name: project.name,
                 url: project.url,
                 field: project.field,
@@ -48,8 +49,21 @@ router.get('/cards', async (req, res) => {
 // get single page
 router.get('/project/:url', async (req, res) => {
     try {
-        console.log("attempting to get project")
+        console.log("attempting to get project by url")
         const project = await Project.findOne({ url: req.params.url }).exec();
+        res.json(project);
+    }
+    catch {
+        res.status(500).json({ message: err.message });
+    }
+})
+
+// get project by id
+router.get('/edit-project/:id', async (req, res) => {
+    try {
+        console.log("attempting to get project")
+        const project = await Project.findById(req.params.id).exec();
+        console.log("project retreived")
         res.json(project);
     }
     catch {
@@ -69,14 +83,15 @@ router.post('/project', async (req, res) => {
             delete dataToValidate["otherLinks"]
         }
         console.log(dataToValidate);
-        const newProject = new Project(req.body);
-        console.log("newProject");
-        await newProject.save();
-        console.log(newProject);
-        res.status(201).json({ message: 'new project created'});
-        /*const newProject = new Project(req.body);
-        await newProject.save();
-        res.status(201).json({ message: 'new project created'});*/
+        const newProject = await new Project(req.body).save((err, dec) => {
+            if (err) {
+                console.log(err)
+                return res.status(500).json({ err: "Entry already exists in db with those values", msg: err });
+            }
+            console.log("newProject saved");
+            console.log(newProject);
+            res.status(201).json({ message: 'new project created'});
+        });
     }
     catch {
         res.status(500).json({ message: err.message });
@@ -86,7 +101,10 @@ router.post('/project', async (req, res) => {
 // edit existing project
 router.put('/project/:url', async (req, res) => {
     try {
-        await Project.findOneAndUpdate({url: req.params.url}, req.body )
+        const id = req.body.id;
+        let projectChanges = red.body;
+        delete projectChanges["id"];
+        await Project.findByIdAndUpdate(id, projectChanges )
         res.status(201).json({ message: 'project updated' });
     }
     catch {
