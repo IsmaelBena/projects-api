@@ -6,11 +6,12 @@ const mongoose = require('mongoose')
 
 const app = express();
 
-/*var corsOptions = {
-  origin: 
-};*/
+var corsOptions = {
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
+};
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 const projectsRouter = require('./routes/projects');

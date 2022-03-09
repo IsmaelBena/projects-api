@@ -25,7 +25,7 @@ router.get('/cards', async (req, res) => {
             });
             if (!filterData.fields.includes(project.field))
             {
-                filterData.fields.push(projects.field)
+                filterData.fields.push(project.field)
             }
             for (let i = 0; i < project.tags.length; i++)
             {
@@ -99,26 +99,51 @@ router.post('/project', async (req, res) => {
 })
 
 // edit existing project
-router.put('/project/:url', async (req, res) => {
+router.put('/edit-project/:id', async (req, res) => {
     try {
-        const id = req.body.id;
-        let projectChanges = red.body;
-        delete projectChanges["id"];
-        await Project.findByIdAndUpdate(id, projectChanges )
+        const id = req.params.id;
+        let projectChanges = req.body;
+        console.log("data retrieved")
+        console.log(projectChanges);
+        if (projectChanges.video === "") {
+            delete projectChanges["video"]
+        }
+        if (projectChanges.otherLinks.length < 1) {
+            delete projectChanges["otherLinks"]
+        }
+        console.log("data edited")
+        console.log(projectChanges);
+        Project.findByIdAndUpdate(id, projectChanges, (error, data) => {
+            if (error){
+                console.log(error)
+            } else {
+                console.log(data)
+            }
+        })
+        console.log("Project changes saved");
         res.status(201).json({ message: 'project updated' });
     }
-    catch {
+    catch (err) {
+        console.log("sum error getting caught")
         res.status(500).json({ message: err.message });
     }
 })
 
-// delete a project by url
-router.delete('/project/:url', async (req, res) => {
+// delete a project by id
+router.delete('/project/:id', (req, res) => {
     try {
-        await Project.deleteOne({url: req.params.url})
-        res.status
+        const id = req.params.id;
+        Project.findByIdAndDelete(id, (error, data) => {
+            if (error) {
+                console.log(error)
+            }
+            else {
+                console.log(data)
+                res.status(201).json({ message: 'project deleted' });
+            }
+        })
     }
-    catch {
+    catch (err) {
         res.status(500).json({ message: err.message });
     }
 })
