@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 // get all cards
 router.get('/cards', async (req, res) => {
     try {
+        console.log("getting project cards");
         const projects = await Project.find();
         let cardsData = [];
         let filterData = {
