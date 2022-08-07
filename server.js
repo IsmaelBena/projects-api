@@ -28,3 +28,4 @@ db.once('open', () => console.log('Connected to db'));
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT)
+console.log(`listening at port: ${PORT}`)
