@@ -83,7 +83,7 @@ router.post('/project', async (req, res) => {
             delete dataToValidate["otherLinks"]
         }
         console.log(dataToValidate);
-        const newProject = await new Project(req.body).save((err, dec) => {
+        const newProject = await new Project(req.body).save(err => {
             if (err) {
                 console.log(err)
                 return res.status(500).json({ err: "Entry already exists in db with those values", msg: err });

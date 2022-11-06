@@ -6,17 +6,17 @@ const projectSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    url: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    field: {
-        type: String,
-        required: true
-    },
-    tags: {
-        type: [String],
+    tech: {
+        type: [{
+            name: {
+                type: String,
+                required: true
+            },
+            imgName: {
+                type: String,
+                required: true
+            }
+        }],
         required: true
     },
     progress: {
@@ -24,26 +24,22 @@ const projectSchema = new mongoose.Schema({
         required: true
     },
     description: {
+        type: [String],
+        required: true
+    },    
+    links: {
         type: [
             {
-                textType: {
+                linkType: {
                     type: String,
                     required: true
                 },
-                text: {
+                url: {
                     type: String,
                     required: true
                 }
             }
         ],
-        required: true
-    },    
-    video: {
-        type: String,
-        required: false
-    },
-    otherLinks: {
-        type: [String],
         required: false
     }
 })
