@@ -6,11 +6,12 @@ const mongoose = require('mongoose')
 
 const app = express();
 
-/*var corsOptions = {
-  origin: 
-};*/
+var corsOptions = {
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
+};
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 const projectsRouter = require('./routes/projects');
@@ -27,3 +28,4 @@ db.once('open', () => console.log('Connected to db'));
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT)
+console.log(`listening at port: ${PORT}`)
