@@ -16,6 +16,7 @@ app.use(express.json());
 
 const projectsRouter = require('./routes/projects');
 app.use('/projects', projectsRouter);
+app.use('/technologies', technologiesRouter);
 
 // import local env variables
 dotenv.config();

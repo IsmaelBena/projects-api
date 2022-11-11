@@ -6,53 +6,12 @@ const mongoose = require('mongoose');
 
 // ==============================================================================================================================================================================
 
-// get all cards
-router.get('/cards', async (req, res) => {
+// get all projects
+router.get('/', async (req, res) => {
     try {
-        console.log("getting project cards");
+        console.log("Recieved GET request at '/projects'")
         const projects = await Project.find();
-        let cardsData = [];
-        let filterData = {
-            fields: [],
-            tags: []
-        };
-        projects.map((project) => {
-            cardsData.push({
-                id: project._id,
-                name: project.name,
-                url: project.url,
-                field: project.field,
-                tags: project.tags,
-            });
-            if (!filterData.fields.includes(project.field))
-            {
-                filterData.fields.push(project.field)
-            }
-            for (let i = 0; i < project.tags.length; i++)
-            {
-                if (!filterData.tags.includes(project.tags[i]))
-                {
-                    filterData.tags.push(project.tags[i])
-                }
-            }
-        });
-        const projectsPageData = {
-            cardsData,
-            filterData
-        }
-        res.json(projectsPageData);
-    }
-    catch {
-        res.status(500).json({ message: err.message });
-    }
-})
-
-// get single page
-router.get('/project/:url', async (req, res) => {
-    try {
-        console.log("attempting to get project by url")
-        const project = await Project.findOne({ url: req.params.url }).exec();
-        res.json(project);
+        res.json(projects);
     }
     catch {
         res.status(500).json({ message: err.message });
@@ -60,11 +19,10 @@ router.get('/project/:url', async (req, res) => {
 })
 
 // get project by id
-router.get('/edit-project/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
     try {
-        console.log("attempting to get project")
+        console.log("Recieved GET request at '/projects' with id of:", req.params.id)
         const project = await Project.findById(req.params.id).exec();
-        console.log("project retreived")
         res.json(project);
     }
     catch {
@@ -75,16 +33,9 @@ router.get('/edit-project/:id', async (req, res) => {
 // add a new project
 router.post('/project', async (req, res) => {
     try {
-        let dataToValidate = req.body;
-        console.log(dataToValidate);
-        if (dataToValidate.video === "") {
-            delete dataToValidate["video"]
-        }
-        if (dataToValidate.otherLinks.length < 1) {
-            delete dataToValidate["otherLinks"]
-        }
-        console.log(dataToValidate);
-        const newProject = await new Project(req.body).save(err => {
+        let newProjectData = req.body;
+        console.log("Request to create new project recieved with values:", newProjectData)
+        const newProject = await new Project(newProjectData).save(err => {
             if (err) {
                 console.log(err)
                 return res.status(500).json({ err: "Entry already exists in db with those values", msg: err });
@@ -100,20 +51,11 @@ router.post('/project', async (req, res) => {
 })
 
 // edit existing project
-router.put('/edit-project/:id', async (req, res) => {
+router.put('/edit/:id', async (req, res) => {
     try {
         const id = req.params.id;
         let projectChanges = req.body;
-        console.log("data retrieved")
-        console.log(projectChanges);
-        if (projectChanges.video === "") {
-            delete projectChanges["video"]
-        }
-        if (projectChanges.otherLinks.length < 1) {
-            delete projectChanges["otherLinks"]
-        }
-        console.log("data edited")
-        console.log(projectChanges);
+        console.log("Request to edit existing project recieved with values -id-:", id, newProjectData)
         Project.findByIdAndUpdate(id, projectChanges, (error, data) => {
             if (error){
                 console.log(error)
@@ -131,9 +73,10 @@ router.put('/edit-project/:id', async (req, res) => {
 })
 
 // delete a project by id
-router.delete('/project/:id', (req, res) => {
+router.delete('/delete/:id', (req, res) => {
     try {
         const id = req.params.id;
+        console.log("Request recieved to delete project with id of:", id)
         Project.findByIdAndDelete(id, (error, data) => {
             if (error) {
                 console.log(error)

@@ -6,27 +6,21 @@ const projectSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    tech: {
-        type: [{
-            name: {
-                type: String,
-                required: true
-            },
-            imgName: {
-                type: String,
-                required: true
-            }
-        }],
+    status: {
+        type: String,
         required: true
     },
-    progress: {
-        type: String,
+    tech: {
+        type: [{
+            type: mongoose.Schema.Types.ObjectID,
+            ref: 'Technology'
+        }],
         required: true
     },
     description: {
         type: [String],
         required: true
-    },    
+    },
     links: {
         type: [
             {
