@@ -15,6 +15,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 const projectsRouter = require('./routes/projects');
+const technologiesRouter = require('./routes/technologies');
 app.use('/projects', projectsRouter);
 app.use('/technologies', technologiesRouter);
 

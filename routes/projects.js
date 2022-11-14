@@ -31,7 +31,7 @@ router.get('/:id', async (req, res) => {
 })
 
 // add a new project
-router.post('/project', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         let newProjectData = req.body;
         console.log("Request to create new project recieved with values:", newProjectData)
@@ -55,7 +55,7 @@ router.put('/edit/:id', async (req, res) => {
     try {
         const id = req.params.id;
         let projectChanges = req.body;
-        console.log("Request to edit existing project recieved with values -id-:", id, newProjectData)
+        console.log("Request to edit existing project recieved with values -id-:", id, projectChanges)
         Project.findByIdAndUpdate(id, projectChanges, (error, data) => {
             if (error){
                 console.log(error)
@@ -67,7 +67,7 @@ router.put('/edit/:id', async (req, res) => {
         res.status(201).json({ message: 'project updated' });
     }
     catch (err) {
-        console.log("sum error getting caught")
+        console.log("An error was caught")
         res.status(500).json({ message: err.message });
     }
 })

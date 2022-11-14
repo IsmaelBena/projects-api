@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
 // get single Technology by ID
 router.get('/:id', async (req, res) => {
     try {
-        console.log("Recieved GET request at '/technologies/:id' with id of", req.params.id)
+        console.log("Recieved GET request at '/technologies/:id' with id:", req.params.id)
         const technology = await Technology.findById(req.params.id).exec();
         res.json(technology);
     }
@@ -33,7 +33,7 @@ router.get('/:id', async (req, res) => {
 // get a Technology by name
 router.get('/:name', async (req, res) => {
     try {
-        console.log("Recieved GET request at '/technologies/:name' with name of", req.params.name)
+        console.log("Recieved GET request at '/technologies/:name' with name:", req.params.name)
         const technology = await Technology.findOne({ name: req.params.name }).exec();
         res.json(technology);
     }
@@ -50,7 +50,7 @@ router.post('/', async (req, res) => {
         const newTechnology = await new Technology(newTechnologyData).save(err => {
             if (err) {
                 console.log(err)
-                return res.status(500).json({ err: "Entry already exists in db with those values", msg: err });
+                return res.status(500).json({ err: "Mongoose validation rejects values", msg: err });
             }
             console.log("New Techology successfully added");
             console.log(newTechnology);
@@ -67,7 +67,7 @@ router.put('/edit/:id', async (req, res) => {
     try {
         const id = req.params.id;
         let technologyChanges = req.body;        
-        console.log("Recieved a request to change existing Technology entry with:", newTechnologyData);
+        console.log("Recieved a request to change existing Technology entry with:", technologyChanges);
         Technology.findByIdAndUpdate(id, technologyChanges, (error, data) => {
             if (error){
                 console.log(error)
