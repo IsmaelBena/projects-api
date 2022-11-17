@@ -6,6 +6,10 @@ const projectSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    date: {
+        type: Date,
+        required: true
+    },
     status: {
         type: String,
         required: true

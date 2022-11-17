@@ -26,7 +26,7 @@ router.get('/:id', async (req, res) => {
         res.json(project);
     }
     catch {
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ message: "some error happened" });
     }
 })
 

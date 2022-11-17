@@ -23,7 +23,7 @@ router.get('/:id', async (req, res) => {
     try {
         console.log("Recieved GET request at '/technologies/:id' with id:", req.params.id)
         const technology = await Technology.findById(req.params.id).exec();
-        res.json(technology);
+        res.json("Old values:", technology);
     }
     catch {
         res.status(500).json({ message: err.message });
