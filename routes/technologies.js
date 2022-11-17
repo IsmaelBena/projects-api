@@ -6,11 +6,23 @@ const mongoose = require('mongoose');
 
 // ==============================================================================================================================================================================
 
+const techSort = (a, b) => {
+    if (a.techType.toLowerCase() === "language") {
+        return -1
+    } else if ((a.techType.toLowerCase() === "framework") && (b.techType.toLowerCase() !== "language")) {
+        return -1
+    } else {
+        return 1
+    }
+}
+
 // get all Technologies
 router.get('/', async (req, res) => {
     try {
         console.log("Recieved GET request at '/technologies'")
-        const technologies = await Technology.find();
+        let technologies = await Technology.find();
+        technologies.sort((a, b) => techSort(a, b))
+        console.log(technologies)
         res.json(technologies)
     }
     catch {
