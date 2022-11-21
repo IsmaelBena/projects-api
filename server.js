@@ -6,15 +6,15 @@ const mongoose = require('mongoose')
 
 const app = express();
 
-var corsOptions = {
+/*var corsOptions = {
   origin: ['*', 'https://13.41.80.68:8000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE']
-};
+};*/
 
-app.use(cors(corsOptions));
+//app.use(cors(corsOptions));
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, PUT, POST");
+  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
