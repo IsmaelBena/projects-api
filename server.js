@@ -7,7 +7,7 @@ const mongoose = require('mongoose')
 const app = express();
 
 var corsOptions = {
-  origin: '*',
+  origin: ['*', 'https://13.41.80.68:8000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE']
 };
 
