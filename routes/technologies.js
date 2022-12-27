@@ -3,8 +3,22 @@ const res = require("express/lib/response");
 const router = express.Router();
 const Technology = require('../models/technology');
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
 // ==============================================================================================================================================================================
+
+dotenv.config();
+
+const isAuth = (req, res, next) => {
+    const token = req.headers.token;
+    if (token === process.env.AUTH_TOKEN) {
+        next();
+    }
+    else {
+        res.status(401);
+        res.send('Access forbidden: Incorrect authentication token');
+    }
+}
 
 const techSort = (a, b) => {
     if (a.techType.toLowerCase() === "language") {
@@ -55,7 +69,7 @@ router.get('/:name', async (req, res) => {
 })
 
 // add a new technology
-router.post('/', async (req, res) => {
+router.post('/', isAuth, async (req, res) => {
     try {
         let newTechnologyData = req.body;
         console.log("Recieved a new entry to the Technologies DataBase:", newTechnologyData);
@@ -75,7 +89,7 @@ router.post('/', async (req, res) => {
 })
 
 // edit existing technology
-router.put('/edit/:id', async (req, res) => {
+router.put('/edit/:id', isAuth, async (req, res) => {
     try {
         const id = req.params.id;
         let technologyChanges = req.body;        
@@ -97,7 +111,7 @@ router.put('/edit/:id', async (req, res) => {
 })
 
 // delete a project by id
-router.delete('/delete/:id', (req, res) => {
+router.delete('/delete/:id', isAuth, (req, res) => {
     try {
         const id = req.params.id;
         console.log("Recieved request to delete Technology with an id of:", id)

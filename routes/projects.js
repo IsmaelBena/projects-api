@@ -3,8 +3,22 @@ const res = require("express/lib/response");
 const router = express.Router();
 const Project = require('../models/project');
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
 // ==============================================================================================================================================================================
+
+dotenv.config();
+
+const isAuth = (req, res, next) => {
+    const token = req.headers.token;
+    if (token === process.env.AUTH_TOKEN) {
+        next();
+    }
+    else {
+        res.status(401);
+        res.send('Access forbidden: Incorrect authentication token');
+    }
+}
 
 // get all projects
 router.get('/', async (req, res) => {
@@ -31,7 +45,7 @@ router.get('/:id', async (req, res) => {
 })
 
 // add a new project
-router.post('/', async (req, res) => {
+router.post('/', isAuth, async (req, res) => {
     try {
         let newProjectData = req.body;
         console.log("Request to create new project recieved with values:", newProjectData)
@@ -51,7 +65,7 @@ router.post('/', async (req, res) => {
 })
 
 // edit existing project
-router.put('/edit/:id', async (req, res) => {
+router.put('/edit/:id', isAuth, async (req, res) => {
     try {
         const id = req.params.id;
         let projectChanges = req.body;
@@ -73,7 +87,7 @@ router.put('/edit/:id', async (req, res) => {
 })
 
 // delete a project by id
-router.delete('/delete/:id', (req, res) => {
+router.delete('/delete/:id', isAuth, (req, res) => {
     try {
         const id = req.params.id;
         console.log("Request recieved to delete project with id of:", id)
