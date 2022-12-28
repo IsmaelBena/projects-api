@@ -15,15 +15,17 @@ const app = express();
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Token");
   next();
 });
 app.use(express.json());
 
 const projectsRouter = require('./routes/projects');
 const technologiesRouter = require('./routes/technologies');
+const authCheckRouter = require('./routes/authCheck');
 app.use('/projects', projectsRouter);
 app.use('/technologies', technologiesRouter);
+app.use('/authCheck', authCheckRouter);
 
 // import local env variables
 dotenv.config();
